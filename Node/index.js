@@ -12,12 +12,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
-const adminRoutes = require('./Routes/admin');
+const { adminRoutes, allProducts } = require('./Routes/admin');
 const sellerRoutes = require('./Routes/seller');
 const commonRoutes = require('./Routes/common');
 const userRoutes = require('./Routes/user');
 const path = require('path');
 const rootDirectory = require('./Helpers/path');
+
+
+app.set('view engine', 'ejs');//we are telling our node app to use a dynamic template engine (pug) to use by set method.
+app.set('views', 'Views'); // we are telling our node app that all our templates will be found on Views Folder
 
 
 // app.use(express.json());
@@ -40,11 +44,12 @@ app.use(express.static(path.join(rootDirectory, 'Public')));
 
 
 app.get('/', (req, res, next) => {
+    // res.redirect('/admin/add-product');
     res.send("<h1>Server is running on 5000 Port</h1>");
 });
 
 app.use((req, res, next) => {
-    res.status(404).sendFile(path.join(rootDirectory, 'Views', '404.html'));
+    res.status(404).render('404.ejs', { title: '404 Not Found' });
 });
 
 app.listen(5000, () => {
